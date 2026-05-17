@@ -1,0 +1,33 @@
+{
+  "name": "gpu-marketplace",
+  "version": "0.1.0",
+  "description": "GPU rental marketplace smart contracts (GPURENT)",
+  "scripts": {
+    "test": "hardhat test",
+    "coverage": "hardhat coverage",
+    "lint": "eslint . --ext .js,.ts,.sol"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.0.0",
+    "@openzeppelin/contracts": "^4.9.3",
+    "@typechain/ethers-v6": "^0.4.0",
+    "@typechain/hardhat": "^8.0.0",
+    "@types/chai": "^4.2.0",
+    "@types/mocha": "^9.1.0",
+    "chai": "^4.3.7",
+    "dotenv": "^17.4.2",
+    "eslint": "^8.0.0",
+    "ethers": "^6.9.0",
+    "hardhat": "^2.19.0",
+    "hardhat-gas-reporter": "^1.0.0",
+    "prettier": "^2.0.0",
+    "solidity-coverage": "^0.8.0",
+    "ts-node": "^10.9.2",
+    "typechain": "^8.2.0",
+    "typescript": "^6.0.3"
+  }
+}
