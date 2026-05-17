@@ -1,36 +1,36 @@
-# GPU Rental Marketplace
+# Маркетплейс аренды GPU
 
-This repository contains smart contracts for renting GPUs paid in GPURENT tokens with escrow and provider reputation staking.
+В этом репозитории содержатся смарт-контракты для аренды GPU с оплатой токенами GPURENT, использованием эскроу (безопасных платежей) и стейкингом репутации провайдеров.
 
-Quick start:
+Быстрый старт:
 
-1. Install dependencies:
+1. Установите зависимости:
 
 ```bash
 npm install
 ```
 
-2. Run tests:
+2. Запустите тесты:
 
 ```bash
 npx hardhat test
 ```
 
-3. Deploy (example to polygonAmoy):
+3. Развертывание (пример для polygonAmoy):
 
 ```bash
 npx hardhat run scripts/deploy.js --network polygonAmoy
 ```
 
-Environment variables: copy `.env.example` to `.env` and set keys.
+Переменные окружения: скопируйте `.env.example` в `.env` и настройте ключи.
 
-## Local API integration
+## Локальная интеграция с API
 
-Run a local chain and export contract metadata for `little-blockchain-api`:
+Запустите локальную сеть и экспортируйте метаданные контрактов для `little-blockchain-api`:
 
 ```bash
 npx hardhat node
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
-The deploy writes `local-chain/deployed-addresses.json` and ABI files under `local-chain/abi/`. It also grants `PROVIDER_ROLE` to the second Hardhat account and transfers GPURENT to the provider and client accounts.
+Скрипт развертывания записывает адреса в `local-chain/deployed-addresses.json` и файлы ABI в `local-chain/abi/`. Он также выдает `PROVIDER_ROLE` второму аккаунту Hardhat и переводит GPURENT на аккаунты провайдера и клиента.
