@@ -26,13 +26,13 @@ module.exports = {
     },
     polygonAmoy: {
       url: process.env.AMOY_RPC_URL || "https://rpc-amoy.polygon.technology/",
-      accounts: accountsFromEnv()
+      accounts: accountsFromEnv(),
+      gasPrice: 30_000_000_000 // 30 gwei — минимум, который принимает Amoy
     }
   },
   etherscan: {
-    apiKey: {
-      sepolia: process.env.ETHERSCAN_API_KEY || "",
-      polygonAmoy: process.env.POLYGONSCAN_API_KEY || ""
-    },
+    // Etherscan V2: единый ключ для всех поддерживаемых эксплореров
+    // (Etherscan, Polygonscan, BSCscan и др.) — берётся с etherscan.io/myaccount
+    apiKey: process.env.ETHERSCAN_API_KEY || ""
   }
 };

@@ -33,4 +33,4 @@ npx hardhat node
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
-Скрипт развертывания записывает адреса в `local-chain/deployed-addresses.json` и файлы ABI в `local-chain/abi/`. Он также выдает `PROVIDER_ROLE` второму аккаунту Hardhat и переводит GPURENT на аккаунты провайдера и клиента.
+Скрипт развертывания записывает адреса в `local-chain/deployed-addresses.json` и файлы ABI в `local-chain/abi/`. Он также выдаёт контракту Marketplace роли `SLASH_ROLE` и `RATER_ROLE` в Reputation и переводит GPURENT на аккаунты провайдера и клиента. Провайдер обязан перед листингом GPU самостоятельно застейкать минимум 1000 GPURENT в ProviderReputation — это и есть «пропуск» в маркетплейс.

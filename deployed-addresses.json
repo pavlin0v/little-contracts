@@ -1,0 +1,15 @@
+{
+  "chainId": 80002,
+  "network": "polygonAmoy",
+  "deployer": "0xdB910979983980fe1ACC656c7f9cf9A19502332e",
+  "providerWallet": null,
+  "clientWallet": null,
+  "contracts": {
+    "GPURentalToken": "0x136bDfcB8179A9A31b51008952419730E7A8A6B7",
+    "ProviderReputation": "0xcef0A58314318F708755CAbBD7cE3beaBec8B992",
+    "Marketplace": "0x395ea1Cd7a5d0aE7B1bb55C7dBe26aC8933eF36D"
+  },
+  "token": "0x136bDfcB8179A9A31b51008952419730E7A8A6B7",
+  "reputation": "0xcef0A58314318F708755CAbBD7cE3beaBec8B992",
+  "marketplace": "0x395ea1Cd7a5d0aE7B1bb55C7dBe26aC8933eF36D"
+}

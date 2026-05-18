@@ -3,47 +3,53 @@ const fs = require("fs");
 const path = require("path");
 
 async function main() {
-  // Получаем аккаунты и информацию о сети
-  const [deployer, providerWallet, clientWallet] = await hre.ethers.getSigners();
+  const signers = await hre.ethers.getSigners();
+  const [deployer, providerWallet, clientWallet] = signers;
   const network = await hre.ethers.provider.getNetwork();
-  console.log("Deploying with", deployer.address);
+  console.log("Deploying with", deployer.address, "on", hre.network.name, "(chainId", Number(network.chainId) + ")");
 
-  // Развертываем контракты
-  // Развертываем наш токен и передаем адрес развертывающего в конструктор
+  // На тестнете в .env обычно один PRIVATE_KEY, так что provider/client signers недоступны.
+  const hasTestWallets = signers.length >= 3;
+
   const Token = await hre.ethers.getContractFactory("GPURentalToken");
   const token = await Token.deploy(deployer.address);
   await token.waitForDeployment();
   console.log("Token:", token.target);
 
-  // Развертываем контракт репутации, передавая адрес токена в конструктор
   const Reputation = await hre.ethers.getContractFactory("ProviderReputation");
   const reputation = await Reputation.deploy(token.target);
   await reputation.waitForDeployment();
   console.log("Reputation:", reputation.target);
 
-  // Развертываем маркетплейс, передавая адреса токена и развертывающего в конструктор
   const Marketplace = await hre.ethers.getContractFactory("Marketplace");
-  const marketplace = await Marketplace.deploy(token.target, deployer.address);
+  const marketplace = await Marketplace.deploy(token.target, deployer.address, reputation.target);
   await marketplace.waitForDeployment();
   console.log("Marketplace:", marketplace.target);
 
-  // Выдаем роли провайдера и финансируем кошельки провайдера и клиента
-  const providerRole = await marketplace.PROVIDER_ROLE();
-  await (await marketplace.grantRole(providerRole, providerWallet.address)).wait();
+  // Marketplace должен уметь slash'ить и записывать рейтинг в Reputation
+  const SLASH_ROLE = await reputation.SLASH_ROLE();
+  const RATER_ROLE = await reputation.RATER_ROLE();
+  await (await reputation.grantRole(SLASH_ROLE, marketplace.target)).wait();
+  await (await reputation.grantRole(RATER_ROLE, marketplace.target)).wait();
+  console.log("Granted SLASH_ROLE and RATER_ROLE to Marketplace");
 
-  // Финансируем провайдера и клиента токенами для тестирования
-  const providerFunding = hre.ethers.parseEther("5000");
-  const clientFunding = hre.ethers.parseEther("2000");
-  await (await token.transfer(providerWallet.address, providerFunding)).wait();
-  await (await token.transfer(clientWallet.address, clientFunding)).wait();
+  if (hasTestWallets) {
+    const providerFunding = hre.ethers.parseEther("5000");
+    const clientFunding = hre.ethers.parseEther("2000");
+    await (await token.transfer(providerWallet.address, providerFunding)).wait();
+    await (await token.transfer(clientWallet.address, clientFunding)).wait();
+    console.log("Funded provider/client wallets with GPURENT");
+  } else {
+    console.log("Skipping provider/client funding: only one signer available.");
+    console.log("Чтобы налить тестовых токенов на чужой адрес — позови token.transfer(<addr>, amount) отдельным скриптом.");
+  }
 
-  // Сохраняем адреса и ABI в JSON файлах
   const addresses = {
     chainId: Number(network.chainId),
     network: hre.network.name,
     deployer: deployer.address,
-    providerWallet: providerWallet.address,
-    clientWallet: clientWallet.address,
+    providerWallet: hasTestWallets ? providerWallet.address : null,
+    clientWallet: hasTestWallets ? clientWallet.address : null,
     contracts: {
       GPURentalToken: token.target,
       ProviderReputation: reputation.target,
@@ -54,12 +60,10 @@ async function main() {
     marketplace: marketplace.target
   };
 
-  // Сохраняем ABI и адреса в папке local-chain для использования в фронтенде
   const outputDir = path.join(__dirname, "..", "local-chain");
   const abiDir = path.join(outputDir, "abi");
   fs.mkdirSync(abiDir, { recursive: true });
 
-  // Сохраняем ABI для каждого контракта
   const artifacts = [
     ["Marketplace", "contracts/Marketplace.sol:Marketplace"],
     ["GPURentalToken", "contracts/GPURentalToken.sol:GPURentalToken"],
@@ -70,13 +74,13 @@ async function main() {
     fs.writeFileSync(path.join(abiDir, `${name}.json`), JSON.stringify(artifact.abi, null, 2));
   }
 
-  // Сохраняем адреса в корневой папке и в папке local-chain
   fs.writeFileSync(path.join(outputDir, "deployed-addresses.json"), JSON.stringify(addresses, null, 2));
   fs.writeFileSync("deployed-addresses.json", JSON.stringify(addresses, null, 2));
   console.log("Saved deployed-addresses.json and local-chain artifacts");
-  console.log("Provider wallet:", providerWallet.address);
-  console.log("Client wallet:", clientWallet.address);
-  console.log("Chain ID:", Number(network.chainId));
+  if (hasTestWallets) {
+    console.log("Provider wallet:", providerWallet.address);
+    console.log("Client wallet:", clientWallet.address);
+  }
 }
 
 main().catch((e) => {
