@@ -53,3 +53,7 @@ npm install
 npx hardhat compile
 npx hardhat test
 ```
+## Локальный запуск:
+<img width="1280" height="864" alt="photo_2026-05-26_21-47-11" src="https://github.com/user-attachments/assets/526db908-0ed2-40cf-a964-99156633a5e7" />
+<img width="1280" height="864" alt="photo_2026-05-26_21-47-55" src="https://github.com/user-attachments/assets/88153200-811f-4d18-b466-63276e939c82" />
+
