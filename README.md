@@ -53,9 +53,3 @@ npm install
 npx hardhat compile
 npx hardhat test
 ```
-
-Деплой на локальную сеть выполняется через `scripts/deploy.js`. После деплоя маркетплейсу нужно выдать роли `SLASH_ROLE` и `RATER_ROLE` в `ProviderReputation`, иначе функции slash и записи рейтинга работать не будут.
-
-## Лицензия
-
-MIT.
